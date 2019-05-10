@@ -10,7 +10,7 @@ class ChuckService
   BASE_URL = "https://api.chucknorris.io".freeze
 
   def search(query)
-    fetch(BASE_URL + "/jokes/search?query=#{URI.encode(query)}")
+    fetch(BASE_URL + "/jokes/search?query=#{URI.encode(query)}")["result"]
   end
 
   def categories
@@ -23,6 +23,7 @@ class ChuckService
 
   def fetch(url)
     response = Net::HTTP.get_response(URI.parse(url))
+    Rails.logger.debug("received response status=#{response.code}, body=#{response.body[0..200]}...")
     handle_response(response)
   end
 
