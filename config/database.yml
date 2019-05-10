@@ -80,6 +80,4 @@ test:
 #
 production:
   <<: *default
-  database: insbef_production
-  username: insbef
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
