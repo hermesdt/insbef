@@ -1,7 +1,10 @@
 language: ruby
 
-ruby:
+rvm:
   - '2.5.0'
+
+addons:
+  postgresql: "9.6"
 
 env:
   IMAGE_NAME=hermesdt/insbef
@@ -23,6 +26,9 @@ jobs:
   include:
     - stage: test
       name: "Unit Tests"
+      before_script:
+        - psql -c 'create database insbef_test;' -U postgres
+        - rake db:migrate
       script: rails spec
     - stage: create_git_tag
       script:
