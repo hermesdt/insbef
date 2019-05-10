@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h1><%= t("home.welcome") %></h1>
+    </div>
+
+    <hr />
+    <div class="col-sm-12">
+        <%= form_tag "/search" do %>
+            <%= text_field_tag "query" %>
+            <%= button_tag "search", class: "button" %>
+        <% end %>
+    </div>
+
+    <hr />
+    <div class="col-sm-12">
+        <%= link_to t("home.random"), "/random" %>
+    </div>
+
+    <hr />
+    <div class="col-sm-12">
+        <h2><%= t("home.use_categories") %></h2>
+        <% @categories.each do |cat| %>
+            <%= link_to "/categories/#{cat}" do %>
+                <span><%= cat %></span>
+            <% end %>
+        <% end %>
+    </div>
+</div>

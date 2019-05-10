@@ -1,3 +1,9 @@
+require 'net/https'
+
+OK = "200".freeze
+JSON_CONTENT_TYPE = "application/json".freeze
+class ChuckServiceException < StandardError;end
+
 class ChuckService
   include Singleton
 
@@ -16,12 +22,29 @@ class ChuckService
   end
 
   def fetch(url)
-    response = Net:HTTP.get_response(url)
+    response = Net::HTTP.get_response(URI.parse(url))
     handle_response(response)
   end
 
   private
 
   def handle_response(response)
+    if response.code != OK
+      raise ChuckServiceException.new({
+        status: response.status,
+        message: "server error",
+        response: response
+      })
+    end
+
+    if response.content_type != JSON_CONTENT_TYPE
+      raise ChuckServiceException.new({
+        status: response.status,
+        message: "unkown content type",
+        response: response
+      })
+    end
+
+    JSON.parse(response.body)
   end
 end

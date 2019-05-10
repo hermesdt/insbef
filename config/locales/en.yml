@@ -30,4 +30,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  home:
+    welcome: Welcome to the best chuck norries search engine!
+    use_categories: You can also select one of the following categories
+    random: "Random joke"
+
