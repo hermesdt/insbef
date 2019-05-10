@@ -1,11 +1,7 @@
 language: ruby
 
-ruby:
+rvm:
   - '2.5.0'
-
-before_script:
-  - cp config/database.yml.travis config/database.yml
-  - psql -c 'create database insbef_test;' -U postgres
 
 addons:
   postgresql: "9.6"
@@ -32,6 +28,9 @@ jobs:
       name: "Unit Tests"
       script: rails spec
     - stage: create_git_tag
+      before_script:
+        - psql -c 'create database insbef_test;' -U postgres
+        - rake db:migrate
       script:
         - git config --global credential.helper store
         - echo $GIT_CI_CREDENTIALS > $HOME/.git-credentials
