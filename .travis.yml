@@ -28,10 +28,9 @@ jobs:
       name: "Unit Tests"
       script: rails spec
     - stage: create_git_tag
-      before_script:
+      script:
         - psql -c 'create database insbef_test;' -U postgres
         - rake db:migrate
-      script:
         - git config --global credential.helper store
         - echo $GIT_CI_CREDENTIALS > $HOME/.git-credentials
         - export NEW_TAG=$(sh bin/semver.sh)
