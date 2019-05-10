@@ -13,11 +13,12 @@
 ActiveRecord::Schema.define(version: 2019_05_10_143837) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "hstore"
   enable_extension "plpgsql"
 
   create_table "queries", force: :cascade do |t|
     t.string "query_type"
-    t.json "parameters"
+    t.hstore "parameters"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -1,3 +1,10 @@
 <div class="row">
     <%= render partial: "result", collection: @results %>
 </div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <%= paginate @results %>
+    </div>
+</div>
+

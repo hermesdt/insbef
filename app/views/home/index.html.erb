@@ -20,7 +20,7 @@
     <div class="col-sm-12 categories">
         <h2><%= t("home.use_categories") %></h2>
         <% @categories.each do |cat| %>
-            <%= link_to "/categories/#{cat}", class="category" do %>
+            <%= link_to "/categories/#{cat}", class: "category" do %>
                 <span><%= cat %></span>
             <% end %>
         <% end %>

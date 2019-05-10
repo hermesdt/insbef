@@ -1,6 +1,7 @@
 class SearchController < ApplicationController
   def index
-    @results = search_service.query(query_param)
+    @query = search_service.query(query_param)
+    @results = @query.results.page(params[:page])
   end
 
   private

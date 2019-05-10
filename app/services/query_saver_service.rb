@@ -3,7 +3,9 @@ class QuerySaverService
     query = Query.create!(query_type: query_type, parameters: parameters)
 
     results.each do |result|
-      query.results.create!(text: result)
+      query.results.create!(text: result.to_json)
     end
+
+    query
   end
 end
