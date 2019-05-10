@@ -1,0 +1,43 @@
+language: ruby
+
+ruby:
+  - '2.5.0'
+
+env:
+  IMAGE_NAME=hermesdt/insbef
+  IMAGE_TAG=$IMAGE_NAME:$TRAVIS_TAG
+  IMAGE_LATEST=$IMAGE_NAME:latest
+
+install:
+  bundle install
+
+stages:
+  - test
+  - name: create_git_tag
+    if: branch = master
+  - name: docker_build
+    if: tag =~ ^v
+  # - deploy
+
+jobs:
+  include:
+    - stage: test
+      name: "Unit Tests"
+      script: rails spec
+    - stage: create_git_tag
+      script:
+        - git config --global credential.helper store
+        - echo $GIT_CI_CREDENTIALS > $HOME/.git-credentials
+        - export NEW_TAG=$(sh bin/next_version.sh)
+        - git tag $NEW_TAG
+        - git push origin $NEW_TAG
+    - stage: docker_build
+      script:
+        - echo "Login in docker $DOCKER_USERNAME"
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - echo "Building images $IMAGE_TAG, $IMAGE_LATEST"
+        - docker build . -t $IMAGE_TAG -t $IMAGE_LATEST
+        - echo "Pushing image $IMAGE_TAG"
+        - docker push $IMAGE_TAG
+        - echo "Pushing image $IMAGE_LATEST"
+        - docker push $IMAGE_LATEST
