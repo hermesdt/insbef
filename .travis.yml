@@ -26,11 +26,12 @@ jobs:
   include:
     - stage: test
       name: "Unit Tests"
+      before_script:
+        - psql -c 'create database insbef_test;' -U postgres
+        - rake db:migrate
       script: rails spec
     - stage: create_git_tag
       script:
-        - psql -c 'create database insbef_test;' -U postgres
-        - rake db:migrate
         - git config --global credential.helper store
         - echo $GIT_CI_CREDENTIALS > $HOME/.git-credentials
         - export NEW_TAG=$(sh bin/semver.sh)
