@@ -13,6 +13,10 @@ class ChuckService
     fetch(BASE_URL + "/jokes/search?query=#{URI.encode(query)}")["result"]
   end
 
+  def random
+    fetch(BASE_URL + "/jokes/random")
+  end
+
   def categories
     fetch(BASE_URL + "/jokes/categories")
   end
@@ -22,28 +26,32 @@ class ChuckService
   end
 
   def fetch(url)
-    response = Net::HTTP.get_response(URI.parse(url))
-    Rails.logger.debug("received response status=#{response.code}, body=#{response.body[0..200]}...")
+    response = request(url)
+    Rails.logger.debug("received response code=#{response.code}, body=#{response.body[0..200]}...")
     handle_response(response)
   end
 
   private
 
+  # :nocov:
+  def request(url)
+    Net::HTTP.get_response(URI.parse(url))
+  end
+  # :nocov:
+
   def handle_response(response)
     if response.code != OK
       raise ChuckServiceException.new({
-        status: response.status,
-        message: "server error",
-        response: response
-      })
+        code: response.code,
+        message: "server error"
+      }.to_json)
     end
 
     if response.content_type != JSON_CONTENT_TYPE
       raise ChuckServiceException.new({
-        status: response.status,
-        message: "unkown content type",
-        response: response
-      })
+        code: response.code,
+        message: "unkown content type"
+      }.to_json)
     end
 
     JSON.parse(response.body)
