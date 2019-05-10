@@ -28,7 +28,7 @@ jobs:
       script:
         - git config --global credential.helper store
         - echo $GIT_CI_CREDENTIALS > $HOME/.git-credentials
-        - export NEW_TAG=$(sh bin/next_version.sh)
+        - export NEW_TAG=$(sh bin/semver.sh)
         - git tag $NEW_TAG
         - git push origin $NEW_TAG
     - stage: docker_build
